@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "429516389394",
+    "firebase_url": "https://flutter--apis.firebaseio.com",
+    "project_id": "flutter-gmail-apis",
+    "storage_bucket": "flutter-gmail-apis.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:429516389394:android:b2d175879872e7042eaccb",
+        "android_client_info": {
+          "package_name": "com.bacancy.gmailpoc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "429516389394-ac7gkhbd76tsj24sv7crulakk2ales1f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmF3jn9YqEF9hbob3cFBchpd_vSoaEb0g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "429516389394-ac7gkhbd76tsj24sv7crulakk2ales1f.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "429516389394-efnrebjrukb2ad5i2d3rsnb4ma2nlr5l.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.bacancy.gmailpoc"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
