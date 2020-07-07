@@ -14,7 +14,7 @@ TextStyle searchHintStyle = TextStyle(
   fontFamily: "sf_light",
 );
 TextStyle messageTitleStyle = TextStyle(
-  fontSize: 19.0,
+  fontSize: 18.0,
   color: ColorAssets.themeColorBlack,
   fontFamily: "sf_medium",
 );

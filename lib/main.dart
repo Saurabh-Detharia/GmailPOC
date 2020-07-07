@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_google_apis/ui/mail_screen.dart';
 import 'package:flutter_google_apis/ui/login_screen.dart';
+import 'package:flutter_google_apis/ui/mail_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:io';
+
 import 'gloabal/api_constants.dart';
 
 void main() {
@@ -37,7 +37,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
        primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
+          //visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: getLoginRedirection(sharedPreferences, isLogin),
     );

@@ -1,16 +1,12 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:flutter_google_apis/gloabal/api_constants.dart';
 import 'package:flutter_google_apis/models/google_user_profile.dart';
-import 'package:flutter_google_apis/network_call/api_services.dart';
-//import 'package:flutter_google_apis/ui/MailsScreen.dart';
 import 'package:flutter_google_apis/ui/mail_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -27,7 +23,7 @@ GoogleSignIn _googleSignIn = GoogleSignIn(
 
 class _LoginScreenState extends State<LoginScreen> {
   GoogleUserProfile googleUserProfile = new GoogleUserProfile();
-  bool isLoggedIn = false;
+  bool isLoading = false;
   SharedPreferences sharedPreference;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
@@ -44,16 +40,16 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: GoogleSignInButton(
-          onPressed: () {signInWithGoogle();},
-          darkMode: true, // default: false
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            GoogleSignInButton(
+              onPressed: () {signInWithGoogle();},
+              darkMode: true,
+            ),
+           isLoading ? new CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.amber),) : new Container()
+          ],
         ),
-//        child: RaisedButton(
-//          child: Text("sign in"),
-//          onPressed: () {
-//
-//          },
-//        ),
       ),
     );
   }
@@ -62,6 +58,9 @@ class _LoginScreenState extends State<LoginScreen> {
   GoogleSignInAccount googleSignInAccount;
 
   Future<String> signInWithGoogle() async {
+    setState(() {
+      isLoading = true;
+    });
     googleSignInAccount = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleSignInAuthentication =
     await googleSignInAccount.authentication;
@@ -77,9 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
     googleUserProfile = GoogleUserProfile.fromJson(_googleSignIn.currentUser);
     assert(user.uid == currentUser.uid);
     Map<String, String> authHeaders= await googleUserProfile.authHeaders;
-    print("Head: $authHeaders");
     String headers = json.encode(authHeaders);
-    print("Head json: $headers");
     if(mounted)
       {
         setState(() {
@@ -92,18 +89,12 @@ class _LoginScreenState extends State<LoginScreen> {
           sharedPreference.setString(ApiConstants.authHeaders, headers);
         });
       }
-
-//    Navigator.push(context, MaterialPageRoute(builder: (context) => MailsScreen(googleUserProfile: googleUserProfile)));
-    Navigator.push(context, MaterialPageRoute(builder: (context) => MailsScreen(googleUserProfile: googleUserProfile, googleSignInAccount: googleSignInAccount)));
+    setState(() {
+      isLoading = false;
+    });
+   Navigator.push(context, MaterialPageRoute(builder: (context) => MailsScreen()));
     return 'signInWithGoogle succeeded: $user';
   }
-
-  /*_sendEmail(GoogleSignInAccount googleSignInAccount){
-    googleSignInAccount.authHeaders.then((result) {
-      var header = {'Authorization': result['Authorization'], 'X-Goog-AuthUser': result['X-Goog-AuthUser']};
-      ApiServices().testingEmail(googleSignInAccount.email, header);
-    });
-  }*/
 
   void signOutGoogle() async{
     await _googleSignIn.signOut();

@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -8,16 +9,24 @@ import 'package:flutter_google_apis/styles/color_assets.dart';
 import 'package:flutter_google_apis/styles/image_assests.dart';
 import 'package:flutter_google_apis/styles/widget_styles.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:googleapis/gmail/v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-class ComposeMailScreen extends StatefulWidget {
+class ReplyScreen extends StatefulWidget {
+
+  final String subject;
+  final Message message;
+  final String sender;
+
+  ReplyScreen(this.subject, this.message, this.sender);
 
   @override
-  _ComposeMailScreenState createState() => _ComposeMailScreenState();
+  _ReplyScreenState createState() => _ReplyScreenState();
 }
 
-class _ComposeMailScreenState extends State<ComposeMailScreen> {
+class _ReplyScreenState extends State<ReplyScreen> {
 
   GoogleHttpClient httpClient;
   TextEditingController toController = TextEditingController();
@@ -81,7 +90,7 @@ class _ComposeMailScreenState extends State<ComposeMailScreen> {
                 sharedPreferences.getString(ApiConstants.loggedInUserName);
             loggedInUserMail =
                 sharedPreferences.getString(ApiConstants.loggedInUserMail);
-            fromController.text = loggedInUserMail;
+            toController.text = loggedInUserMail;
             res = jsonDecode(sharedPreference.getString(ApiConstants.authHeaders));
           });
         }
@@ -91,6 +100,10 @@ class _ComposeMailScreenState extends State<ComposeMailScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    subjectController.text = "Re: " + widget.subject;
+    fromController.text =  widget.sender;
+
     return Container(
       color: ColorAssets.themeColorBlue,
       child: SafeArea(
@@ -414,7 +427,7 @@ class _ComposeMailScreenState extends State<ComposeMailScreen> {
 
       String from = fromController.text.toString();
       String to = toController.text.toString();
-      String sub = subjectController.text.toString();
+      String sub = "Re: ${widget.subject}";
       String message = composeMailController.text.toString();
       String cc = ccController.text.toString();
       String bcc = bccController.text.toString();
@@ -430,7 +443,7 @@ class _ComposeMailScreenState extends State<ComposeMailScreen> {
     header['To'] = userId;
 
 
-    var content = "From: $from\nTo: $to\nbcc: $from\nSubject: $sub\n\n$message";
+    var content = "From: $from\nTo: $to\nbcc: $from\nSubject: $sub\nMessage-ID: ${widget.message.id}\nIn-Reply-To: ${widget.sender}\n\n$message";
 
     var bytes = utf8.encode(content);
     var base64 = base64UrlEncode(bytes);
